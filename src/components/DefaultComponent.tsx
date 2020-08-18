@@ -3,23 +3,23 @@ import { connect } from 'react-redux';
 import '../styles/DefaultComponent.css';
 import { RootState } from '../redux/reducers';
 import { bindActionCreators } from 'redux';
-import { setContentAsync } from '../redux/actions/default';
+import { apiLogin } from '../redux/actions/auth';
 import { AppDispatch } from '../redux';
 
 type DefaultComponentOwnProps = {};
 
 const mapStateToProps = (state: RootState, ownProps: DefaultComponentOwnProps) => {
-    const defaultReducerContent = state.DefaultReducer.content;
+    const currentToken = state.AuthReducer.token;
 
     return {
-        defaultReducerContent
+        currentToken
     };
 };
 
 const mapDispatchToProps = (dispatch: AppDispatch) =>
     bindActionCreators(
         {
-            setContent: setContentAsync
+            apiLogin
         },
         dispatch
     );
@@ -33,13 +33,13 @@ type DefaultComponentProps = ReturnType<typeof mapStateToProps> & ReturnType<typ
 
 const DefaultComponent: React.FC<DefaultComponentProps> = (props) => {
     useEffect(() => {
-        props.setContent('a non-initial value');
+        props.apiLogin();
     }, []);
     return (
         <div className='DefaultComponent'>
             <header className='DefaultComponent-header'>
                 <p>A template React app!</p>
-                <p>{props.defaultReducerContent}</p>
+                <p>{new String(props.currentToken)}</p>
             </header>
         </div>
     );
