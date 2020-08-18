@@ -1,12 +1,14 @@
-import { combineReducers } from "@reduxjs/toolkit";
+import { combineReducers } from '@reduxjs/toolkit';
 
 // Import reducers
-import DefaultReducer from "./default";
+import DefaultReducer from './default';
+import AuthReducer from './auth';
 
 // Combine reducers
 const rootReducer = combineReducers({
-  // Your reducers here
-  DefaultReducer,
+    // Your reducers here
+    DefaultReducer,
+    AuthReducer
 });
 
 // Export

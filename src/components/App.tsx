@@ -1,23 +1,23 @@
-import React from "react";
-import { Provider } from "react-redux";
+import React from 'react';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 
-import store from "../redux";
-import DefaultComponent from "./DefaultComponent";
+import { store, persistor } from '../redux';
+import DefaultComponent from './DefaultComponent';
 
 function App() {
-  return (
-    <Provider store={store}>
-      <DefaultComponent />
-    </Provider>
-  );
+    return (
+        <Provider store={store}>
+            <PersistGate persistor={persistor} loading={null}>
+                <DefaultComponent />
+            </PersistGate>
+        </Provider>
+    );
 }
 
 // TODO:
 // pre-commit linting?
-// persist
 // router
-// api manager + endpoints
 // serialization
-// dotenv?
 
 export default App;
