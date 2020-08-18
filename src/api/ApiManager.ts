@@ -1,6 +1,7 @@
 import React from 'react';
 import Axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { store } from '../redux';
+import { Response } from '../types/NetworkTypes';
 
 import { Serialize, Deserialize } from 'cerialize';
 
@@ -9,7 +10,7 @@ const defaultHeaders = {
     'Content-Type': 'application/json'
 };
 
-class ApiManager {
+export default class ApiManager {
     axiosInstance: AxiosInstance;
 
     static instance: ApiManager = new ApiManager();
@@ -22,7 +23,8 @@ class ApiManager {
         });
 
         this.axiosInstance.interceptors.request.use((config: AxiosRequestConfig) => {
-            const token = store.getState().AuthReducer.token;
+            const user = store.getState().AuthReducer.user;
+            const token = user && user.token;
             if (token) {
                 config.headers.Authorization = `Bearer ${token}`;
             }
@@ -38,7 +40,7 @@ class ApiManager {
         return this.instance;
     }
 
-    request(method: AxiosRequestConfig['method'], url: string, data?: any, options?: any) {
+    request<T>(method: AxiosRequestConfig['method'], url: string, data?: any, options?: any): Promise<Response<T>> {
         const serializedData = !!data ? Serialize(data) : undefined;
         const params = !!options && !!options.params ? options.params : undefined;
         return this.axiosInstance
@@ -49,7 +51,7 @@ class ApiManager {
                 params
             })
             .then((response) => {
-                return Deserialize(response.data);
+                return new Response<T>((data = Deserialize(response.data)));
             });
     }
 }

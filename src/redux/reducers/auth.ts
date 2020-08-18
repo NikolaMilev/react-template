@@ -1,21 +1,32 @@
 import { createReducer, PayloadAction } from '@reduxjs/toolkit';
-import AuthActions from '../actions/auth';
+import { loginSuccess, loginError } from '../actions/auth';
+import { User } from '../../types/User';
 
 export type AuthReducerState = {
-    token: string | null;
+    user: User | null;
+    loginError: string | null;
 };
 
 export const INITIAL_AUTH_REDUCER_STATE: AuthReducerState = {
-    token: null
+    user: null,
+    loginError: null
 };
 
 const AuthReducer = createReducer(INITIAL_AUTH_REDUCER_STATE, (builder) =>
-    builder.addCase(AuthActions.setToken, (state: AuthReducerState, action: PayloadAction<string>) => {
-        return {
-            ...state,
-            content: action.payload
-        } as AuthReducerState;
-    })
+    builder
+        .addCase(loginSuccess, (state: AuthReducerState, action: PayloadAction<User>) => {
+            return {
+                ...state,
+                user: action.payload,
+                loginError: null
+            };
+        })
+        .addCase(loginError, (state: AuthReducerState, action: PayloadAction<string>) => {
+            return {
+                ...state,
+                loginError: action.payload
+            };
+        })
 );
 
 export default AuthReducer;

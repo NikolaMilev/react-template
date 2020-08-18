@@ -3,13 +3,13 @@ import { connect } from 'react-redux';
 import '../styles/DefaultComponent.css';
 import { RootState } from '../redux/reducers';
 import { bindActionCreators } from 'redux';
-import { apiLogin } from '../redux/actions/auth';
+import { emailLogin } from '../redux/actions/auth';
 import { AppDispatch } from '../redux';
 
 type DefaultComponentOwnProps = {};
 
 const mapStateToProps = (state: RootState, ownProps: DefaultComponentOwnProps) => {
-    const currentToken = state.AuthReducer.token;
+    const currentToken = state.AuthReducer.user && state.AuthReducer.user.token;
 
     return {
         currentToken
@@ -19,7 +19,7 @@ const mapStateToProps = (state: RootState, ownProps: DefaultComponentOwnProps) =
 const mapDispatchToProps = (dispatch: AppDispatch) =>
     bindActionCreators(
         {
-            apiLogin
+            emailLogin
         },
         dispatch
     );
@@ -33,7 +33,7 @@ type DefaultComponentProps = ReturnType<typeof mapStateToProps> & ReturnType<typ
 
 const DefaultComponent: React.FC<DefaultComponentProps> = (props) => {
     useEffect(() => {
-        props.apiLogin();
+        props.emailLogin('nikola@milev.com', 'ultraSecret');
     }, []);
     return (
         <div className='DefaultComponent'>
